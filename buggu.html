@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Birthday Surprise 🎂</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    height:100vh;
+    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Segoe UI',sans-serif;
+    overflow:hidden;
+}
+
+.hidden{display:none}
+
+.start{
+    text-align:center;
+    animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+    100%{transform:scale(1)}
+}
+
+.envelope{
+    width:260px;
+    height:170px;
+    background:#fff;
+    position:relative;
+    cursor:pointer;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.flap{
+    position:absolute;
+    top:0;
+    width:100%;
+    height:100%;
+    background:#ff6f91;
+    clip-path:polygon(0 0,50% 60%,100% 0);
+    transform-origin:top;
+    transition:1s;
+}
+
+.envelope.open .flap{
+    transform:rotateX(180deg);
+}
+
+.paper{
+    position:absolute;
+    width:90%;
+    height:auto;
+    background:white;
+    top:100%;
+    left:5%;
+    padding:15px;
+    text-align:center;
+    border-radius:10px;
+    transition:1s;
+}
+
+.envelope.open .paper{
+    top:-120%;
+}
+
+input{
+    padding:8px;
+    width:80%;
+}
+
+button{
+    margin-top:10px;
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    background:#ff4081;
+    color:white;
+    cursor:pointer;
+}
+
+.final{
+    text-align:center;
+    animation:zoom 1s ease;
+}
+
+@keyframes zoom{
+    from{transform:scale(0)}
+    to{transform:scale(1)}
+}
+
+.emoji{
+    position:absolute;
+    font-size:28px;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    0%{top:-10vh}
+    100%{top:110vh}
+}
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<div class="start" id="start">
+    <h2>📱 Tap Anywhere<br>💻 Press ENTER</h2>
+</div>
+
+<!-- ENVELOPE -->
+<div class="envelope hidden" id="envelope">
+    <div class="flap"></div>
+    <div class="paper">
+        <h3>🤔 Guess Karo</h3>
+        <p>Main kaun hoon?</p>
+        <input id="answer" placeholder="Type here">
+        <br>
+        <button onclick="check()">Submit</button>
+        <p id="msg"></p>
+    </div>
+</div>
+
+<!-- LETTER -->
+<div class="final hidden" id="letter">
+    <p>
+        Didi / Bhabhi 💖<br><br>
+        Happy Birthday 🎂🥳<br><br>
+        Shayad wish thodi late ho gayi,<br>
+        par main chahta tha meri wish special ho ✨<br><br>
+        Shiv ji aapko hamesha khush rakhein 🙏<br>
+        Aapki aur aapke future partner ki shaadi<br>
+        jaldi ho aur dono bahut successful ho 💫<br><br>
+        — <b>Krishna</b>
+    </p>
+    <button onclick="closeLetter()">Click 💌</button>
+</div>
+
+<!-- END -->
+<div class="final hidden" id="end">
+    <h1>🎉 HAPPY BIRTHDAY BUGGU 🎉</h1>
+</div>
+
+<script>
+let tries=0;
+const answers=["bhai","bhaiya","krishna","krishna bhai","krishna bhaiya","brother"];
+
+function start(){
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("envelope").classList.remove("hidden");
+}
+
+document.body.addEventListener("click", start, { once:true });
+document.body.addEventListener("keydown", e=>{
+    if(e.key==="Enter") start();
+},{ once:true });
+
+document.getElementById("envelope").onclick=()=>{
+    document.getElementById("envelope").classList.add("open");
+}
+
+function check(){
+    let val=document.getElementById("answer").value.toLowerCase();
+    tries++;
+
+    if(answers.some(a=>val.includes(a))){
+        document.getElementById("envelope").classList.add("hidden");
+        document.getElementById("letter").classList.remove("hidden");
+        emojiRain();
+    }else if(tries>=3){
+        document.getElementById("msg").innerHTML=
+        "❌ Wrong!<br><b>Call / Msg Ronak for answer 😄</b>";
+    }else{
+        document.getElementById("msg").innerText="❌ Galat… phir try karo";
+    }
+}
+
+function closeLetter(){
+    document.getElementById("letter").classList.add("hidden");
+    document.getElementById("end").classList.remove("hidden");
+    emojiRain();
+}
+
+function emojiRain(){
+    const em=["🎂","🎉","🎁","🥳","💖","✨","🎈"];
+    for(let i=0;i<35;i++){
+        let e=document.createElement("div");
+        e.className="emoji";
+        e.innerText=em[Math.floor(Math.random()*em.length)];
+        e.style.left=Math.random()*100+"vw";
+        e.style.animationDuration=(2+Math.random()*3)+"s";
+        document.body.appendChild(e);
+        setTimeout(()=>e.remove(),5000);
+    }
+}
+</script>
+
+</body>
+</html>
